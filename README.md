@@ -145,3 +145,59 @@ Now you can use the entities:
 You can also retrieve the expression associated with an identifier:
 
 	jsen.expr('urn:my-namespace', 'my-array-id'); // ['http://ecma-international.org/ecma-262/5.1:Array', 1, 2]
+
+Namespaces may be declared all at once. When this is done, you may use abbreviated namespace references:
+
+	jsen.decl('urn:my-namespace', {
+		'js': 'http://ecma-international.org/ecma-262/5.1:',
+
+		'my-id': 10,
+		'my-array-id': ['js:Array', 1, 2]
+	});
+
+You may also retrieve the values or expressions of a namespace all at once:
+
+	jsen.eval('urn:my-namespace'); // { 'my-id': 10, 'my-array-id': [1, 2]}
+	jsen.expr('urn:my-namespace'); // { 'my-id': 10, 'my-array-id': ['http://ecma-international.org/ecma-262/5.1:Array', 1, 2]}
+
+Note that the namespace reference is expanded into a URI when the expression is retrieved.
+
+A set of namespaces may be declared, evaluated, or expressed all at once:
+
+	jsen.decl({
+		'urn:my-namespace': {
+			'js': 'http://ecma-international.org/ecma-262/5.1:',
+
+			'my-id': 10,
+			'my-array-id': ['js:Array', 1, 2]
+		},
+		'urn:my-other-namespace': {
+			'my-id': 20
+		}
+	});
+	jsen.eval(); // { 'urn:my-namespace': { 'my-id': 10, 'my-array-id': [1, 2]}, 'urn:my-other-namespace': { 'my-id': 20 } }
+	jsen.expr(); // { 'urn:my-namespace': { 'my-id': 10, 'my-array-id': ['http://ecma-international.org/ecma-262/5.1:Array', 1, 2]}, 'urn:my-other-namespace': { 'my-id': 20 } }
+
+### Solver Instances
+
+Apart from the global functions, you may use a **solver instance**. This prevents collisions with other code using JSEN.
+
+To create a solver instance:
+
+	var solver = jsen.solver();
+
+Now you can use all the global functions in the same manner:
+
+	solver.decl({
+		'urn:my-namespace': {
+			'js': 'http://ecma-international.org/ecma-262/5.1:',
+
+			'my-id': 33,
+			'my-array-id': ['js:Array', 5, 6, 7]
+		},
+		'urn:my-other-namespace': {
+			'my-id': 44
+		}
+	});
+	solver.eval(); // { 'urn:my-namespace': { 'my-id': 33, 'my-array-id': [5, 6, 7]}, 'urn:my-other-namespace': { 'my-id': 44 } }
+	solver.expr(); // { 'urn:my-namespace': { 'my-id': 22, 'my-array-id': ['http://ecma-international.org/ecma-262/5.1:Array', 5, 6, 7]}, 'urn:my-other-namespace': { 'my-id': 44 } }
