@@ -12,8 +12,10 @@ Important Files
 ---------------
 * `bin/jsen.js`: JSEN as a JavaScript file.
 * `bin/jsen.min.js`: A minified version of `jsen.js`.
+* `bin/ecma262.js`: ECMA-262 namespace for JSEN.
 * `src/jsen.d.ts`: A TypeScript declaration file for JSEN.
-* `src/jsen.ts`: The source for JSEN.
+* `src/jsen.ts`: The TypeScript source for JSEN.
+* `src/ecma262.ts`: The TypeScript source for the ECMA-262 namespace.
 * `build.sh`: UNIX shell script to build the JavaScript files from TypeScript source. Requires Java and the [TypeScript](http://typescriptlang.org/) compiler.
 
 The JSEN Format
@@ -67,7 +69,7 @@ Using this, expressions like the following may be formed:
 
 When evaluated, `"x"` will yield `3` (JavaScript: `1 + 2`), `"y"` will yield `1` (JavaScript: `Math.sin(Math.PI / 2)`), and `"z"` will yield `[4, 5, 6]` (JavaScript: `Array(4, 5, 6)`).
 
-Since this sort of expression is rather verbose, JSEN allows for arbitrary references to other namespaces:
+Since this sort of expression is rather verbose, JSEN allows for arbitrary references to namespaces:
 
 	{
 		"js": "http://ecma-international.org/ecma-262/5.1:",
@@ -114,7 +116,7 @@ These include:
 
 * Literals: `undefined`, `NaN`, `Infinity`.
 * Accessors: `[]`.
-* Operators: `void`, `+`, `-`, `~`, `!`, `*`, `/`, `%`, `+`, `-`, `<<`, `>>`, `>>>`, `<`, `>`, `<=`, `>=`, `in`, `==`, `!=`, `===`, `!==`, `&`, `^`, `|`, `&&`, `||`, `?:`.
+* Operators: `void`, `+`, `-`, `~`, `!`, `*`, `/`, `%`, `<<`, `>>`, `>>>`, `<`, `>`, `<=`, `>=`, `in`, `==`, `!=`, `===`, `!==`, `&`, `^`, `|`, `&&`, `||`, `?:`.
 * Top-level functions: `isFinite`, `isNaN`, `Array`, `Boolean`, `Number`.
 * All constants of the `Math` object (`Math.E`, `Math.LN2`, etc.).
 * All functions of the `Math` object (`Math.abs`, `Math.acos`, etc.).
