@@ -133,6 +133,11 @@ The expression may be evaluated like so:
 
 	jsen.eval('urn:my-namespace', 'my-id'); // 10
 
+Declarations may be chained:
+
+	jsen.decl('urn:my-namespace', 'my-id', 10)
+	    .decl('urn:my-namespace', 'my-id-2', 20);
+
 To use the ECMA-262 entities:
 
 	jsen.ecma262.decl();
@@ -175,8 +180,8 @@ A set of namespaces may be declared, evaluated, or expressed all at once:
 			'my-id': 20
 		}
 	});
-	jsen.eval(); // { 'urn:my-namespace': { 'my-id': 10, 'my-array-id': [1, 2]}, 'urn:my-other-namespace': { 'my-id': 20 } }
-	jsen.expr(); // { 'urn:my-namespace': { 'my-id': 10, 'my-array-id': ['http://ecma-international.org/ecma-262/5.1:Array', 1, 2]}, 'urn:my-other-namespace': { 'my-id': 20 } }
+	jsen.eval(); // { 'urn:my-namespace': { 'my-id': 10, 'my-array-id': [1, 2]}, 'urn:my-other-namespace': { 'my-id': 20 } /* Plus all ECMA-262 entities */ }
+	jsen.expr(); // { 'urn:my-namespace': { 'my-id': 10, 'my-array-id': ['http://ecma-international.org/ecma-262/5.1:Array', 1, 2]}, 'urn:my-other-namespace': { 'my-id': 20 } /* Plus all ECMA-262 entities */ }
 
 ### Solver Instances
 
@@ -188,6 +193,7 @@ To create a solver instance:
 
 Now you can use all the global functions in the same manner:
 
+	jsen.ecma262.decl(solver); // To make ECMA-262 entities available.
 	solver.decl({
 		'urn:my-namespace': {
 			'js': 'http://ecma-international.org/ecma-262/5.1:',
@@ -199,5 +205,5 @@ Now you can use all the global functions in the same manner:
 			'my-id': 44
 		}
 	});
-	solver.eval(); // { 'urn:my-namespace': { 'my-id': 33, 'my-array-id': [5, 6, 7]}, 'urn:my-other-namespace': { 'my-id': 44 } }
-	solver.expr(); // { 'urn:my-namespace': { 'my-id': 22, 'my-array-id': ['http://ecma-international.org/ecma-262/5.1:Array', 5, 6, 7]}, 'urn:my-other-namespace': { 'my-id': 44 } }
+	solver.eval(); // { 'urn:my-namespace': { 'my-id': 33, 'my-array-id': [5, 6, 7]}, 'urn:my-other-namespace': { 'my-id': 44 } /* Plus all ECMA-262 entities */ }
+	solver.expr(); // { 'urn:my-namespace': { 'my-id': 33, 'my-array-id': ['http://ecma-international.org/ecma-262/5.1:Array', 5, 6, 7]}, 'urn:my-other-namespace': { 'my-id': 44 } /* Plus all ECMA-262 entities */ }

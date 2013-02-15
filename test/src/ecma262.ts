@@ -133,3 +133,52 @@ test("ECMA-262: Operators", function()
 // :TODO: Top-level functions: `isFinite`, `isNaN`, `Array`, `Boolean`, `Number`.
 // :TODO: All constants of the `Math` object (`Math.E`, `Math.LN2`, etc.).
 // :TODO: All functions of the `Math` object (`Math.abs`, `Math.acos`, etc.).
+test("ECMA-262: Using JSEN examples", function()
+{
+	jsen.decl('urn:my-namespace', 'my-id', 10); // The last argument can be any JSEN expression.
+	strictEqual(jsen.eval('urn:my-namespace', 'my-id'), 10);
+	jsen.decl('urn:my-namespace', 'my-id', 10)
+	    .decl('urn:my-namespace', 'my-id', 10);
+	strictEqual(jsen.eval('urn:my-namespace', 'my-id'), 10);
+	jsen.ecma262.decl();
+	jsen.decl('urn:my-namespace', 'my-array-id', <any[]> ['http://ecma-international.org/ecma-262/5.1:Array', 1, 2]);
+	deepEqual(jsen.eval('urn:my-namespace', 'my-array-id'), [1, 2]);
+	deepEqual(jsen.expr('urn:my-namespace', 'my-array-id'), <any[]> ['http://ecma-international.org/ecma-262/5.1:Array', 1, 2]);
+	jsen.decl('urn:my-namespace', {
+		'js': 'http://ecma-international.org/ecma-262/5.1:',
+
+		'my-id': 10,
+		'my-array-id': <any[]> ['js:Array', 1, 2]
+	});
+	deepEqual(jsen.eval('urn:my-namespace'), { 'my-id': 10, 'my-array-id': [1, 2]});
+	deepEqual(jsen.expr('urn:my-namespace'), { 'my-id': 10, 'my-array-id': <any[]> ['http://ecma-international.org/ecma-262/5.1:Array', 1, 2]});
+	jsen.decl({
+		'urn:my-namespace': {
+			'js': 'http://ecma-international.org/ecma-262/5.1:',
+
+			'my-id': 10,
+			'my-array-id': <any[]> ['js:Array', 1, 2]
+		},
+		'urn:my-other-namespace': {
+			'my-id': 20
+		}
+	});
+	deepEqual(jsen.eval(), { 'urn:my-namespace': { 'my-id': 10, 'my-array-id': [1, 2]}, 'urn:my-other-namespace': { 'my-id': 20 }, 'http://ecma-international.org/ecma-262/5.1': jsen.eval(jsen.ecma262.URI) });
+	deepEqual(jsen.expr(), { 'urn:my-namespace': { 'my-id': 10, 'my-array-id': <any[]> ['http://ecma-international.org/ecma-262/5.1:Array', 1, 2]}, 'urn:my-other-namespace': { 'my-id': 20 }, 'http://ecma-international.org/ecma-262/5.1': jsen.expr(jsen.ecma262.URI) });
+
+	var solver = jsen.solver();
+	jsen.ecma262.decl(solver); // To make ECMA-262 entities available.
+	solver.decl({
+		'urn:my-namespace': {
+			'js': 'http://ecma-international.org/ecma-262/5.1:',
+
+			'my-id': 33,
+			'my-array-id': <any[]> ['js:Array', 5, 6, 7]
+		},
+		'urn:my-other-namespace': {
+			'my-id': 44
+		}
+	});
+	deepEqual(solver.eval(), { 'urn:my-namespace': { 'my-id': 33, 'my-array-id': [5, 6, 7]}, 'urn:my-other-namespace': { 'my-id': 44 }, 'http://ecma-international.org/ecma-262/5.1': jsen.eval(jsen.ecma262.URI) });
+	deepEqual(solver.expr(), { 'urn:my-namespace': { 'my-id': 33, 'my-array-id': <any[]> ['http://ecma-international.org/ecma-262/5.1:Array', 5, 6, 7]}, 'urn:my-other-namespace': { 'my-id': 44 }, 'http://ecma-international.org/ecma-262/5.1': jsen.expr(jsen.ecma262.URI) });
+});
