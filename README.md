@@ -144,4 +144,4 @@ Now you can use the entities:
 
 You can also retrieve the expression associated with an identifier:
 
-	jsen.eval('urn:my-namespace', 'my-array-id'); // ['http://ecma-international.org/ecma-262/5.1:Array', 1, 2]
+	jsen.expr('urn:my-namespace', 'my-array-id'); // ['http://ecma-international.org/ecma-262/5.1:Array', 1, 2]
