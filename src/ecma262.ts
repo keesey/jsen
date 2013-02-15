@@ -1,4 +1,4 @@
-///<reference path='./jsen.d.ts' />
+///<reference path='./ecma262.d.ts' />
 module ecma262
 {
 	export var URI = "http://ecma-international.org/ecma-262/5.1";
@@ -79,11 +79,9 @@ module ecma262
 		"Math.tan": Math.tan
 	};
 
-	var ARGS = 'This operator requires at least ';
+	var ARGS_GTE_1 = 'This operator requires at least one argument.';
 
-	var ARGS_GTE_1 = ARGS + 'one argument.';
-
-	var ARGS_GTE_2 = ARGS + 'two arguments.';
+	var ARGS_GTE_2 = 'This operator requires at least two arguments.';
 
 	function and(...args:any[])
 	{
@@ -179,8 +177,12 @@ module ecma262
 		};
 	}
 
-	export function decl(solver?: jsen.Solver = null, uri?: string = "http://ecma-international.org/ecma-262/5.1"): jsen.Solver
+	export function decl(solver?: jsen.Solver = null, uri?: string = null): jsen.Solver
 	{
+		if (uri === null)
+		{
+			uri = URI;
+		}
 		if (solver)
 		{
 			return solver.decl(uri, NAMESPACE);

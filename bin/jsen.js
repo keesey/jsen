@@ -89,7 +89,7 @@ var jsen;
             if (typeof uri === "undefined") { uri = null; }
             if (typeof localName === "undefined") { localName = null; }
             if(typeof uri === "string") {
-                var sourceNS = this._nsEval[uri];
+                var sourceNS = this._nsEval(uri);
                 if(typeof localName === "string") {
                     if(sourceNS.hasOwnProperty(localName)) {
                         return sourceNS[localName];
@@ -100,15 +100,15 @@ var jsen;
                     }
                     this._stack[qName] = true;
                     try  {
-                        value = sourceNS[localName] = this._evalExpr(uri, this._nsEval(uri)[localName]);
+                        value = sourceNS[localName] = this._evalExpr(uri, this._nsExpr(uri)[localName]);
                     }finally {
                         delete this._stack[qName];
                     }
                     return value;
                 }
                 var resultNS = {
-                };
-                for(localName in sourceNS) {
+                }, sourceExprNS = this._nsExpr(uri);
+                for(localName in sourceExprNS) {
                     resultNS[localName] = this.eval(uri, localName);
                 }
                 return resultNS;

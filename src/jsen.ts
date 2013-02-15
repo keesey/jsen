@@ -112,7 +112,7 @@ module jsen
 		{
 			if (typeof uri === "string")
 			{
-				var sourceNS: Namespace = this._nsEval[uri];
+				var sourceNS: Namespace = this._nsEval(uri);
 				if (typeof localName === "string")
 				{
 					if (sourceNS.hasOwnProperty(localName))
@@ -128,7 +128,7 @@ module jsen
 					this._stack[qName] = true;
 					try
 					{
-						value = sourceNS[localName] = this._evalExpr(uri, this._nsEval(uri)[localName]);
+						value = sourceNS[localName] = this._evalExpr(uri, this._nsExpr(uri)[localName]);
 					}
 					finally
 					{
@@ -136,8 +136,9 @@ module jsen
 					}
 					return value;
 				}
-				var resultNS: Namespace = {};
-				for (localName in sourceNS)
+				var resultNS: Namespace = {},
+					sourceExprNS = this._nsExpr(uri);
+				for (localName in sourceExprNS)
 				{
 					resultNS[localName] = this.eval(uri, localName);
 				}

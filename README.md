@@ -50,7 +50,7 @@ The JSEN library optionally includes a namespace with the URI `"http://ecma-inte
 Using this, expressions like the following may be formed:
 
 	{
-		"x": ["http://ecma-international.org/ecma-262/5.1:+"
+		"x": ["http://ecma-international.org/ecma-262/5.1:+",
 				1,
 				2
 			],
@@ -60,7 +60,7 @@ Using this, expressions like the following may be formed:
 					2
 				]
 			],
-		"z": ["http://ecma-international.org/ecma-262/5.1:Math.Array",
+		"z": ["http://ecma-international.org/ecma-262/5.1:Array",
 				4,
 				5,
 				6
