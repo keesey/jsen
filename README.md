@@ -125,4 +125,23 @@ These include:
 Using JSEN
 ----------
 
-:TODO:
+The simplest way to use JSEN is to use the **global** functions. To declare an identifier as representing the value of an expression:
+
+	jsen.decl('urn:my-namespace', 'my-id', 10); // The last argument can be any JSEN expression.
+
+The expression may be evaluated like so:
+
+	jsen.eval('urn:my-namespace', 'my-id'); // 10
+
+To use the ECMA-262 entities:
+
+	jsen.ecma262.use();
+
+Now you can use:
+
+	jsen.decl('urn:my-namespace', 'my-array-id', ['http://ecma-international.org/ecma-262/5.1:Array', 1, 2]);
+	jsen.eval('urn:my-namespace', 'my-array-id'); // [1, 2]
+
+You can also retrieve the expression associated with an identifier:
+
+	jsen.eval('urn:my-namespace', 'my-array-id'); // ['http://ecma-international.org/ecma-262/5.1:Array', 1, 2]
