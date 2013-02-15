@@ -220,7 +220,7 @@ var ecma262;
     }
     ecma262.decl = decl;
 })(ecma262 || (ecma262 = {}));
-test("Basic declarations", function () {
+test("Basic declarationsusing ECMA-262", function () {
     var solver = jsen.solver();
     ecma262.decl(solver);
     solver.decl('test', {

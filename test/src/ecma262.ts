@@ -1,7 +1,7 @@
 ///<reference path='../../src/jsen.d.ts' />
 ///<reference path='../../src/ecma262.ts' />
 ///<reference path='../qunit/qunit.d.ts' />
-test("Basic declarations", function () {
+test("Basic declarationsusing ECMA-262", function () {
 	var solver = jsen.solver();
     ecma262.decl(solver);
 	solver.decl('test',

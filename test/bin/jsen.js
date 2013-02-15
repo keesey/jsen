@@ -15,3 +15,30 @@ test("Declaring constants", function () {
         "f": false
     });
 });
+test("Identifier in declaration", function () {
+    var solver = jsen.solver();
+    solver.decl('test', {
+        "x": 2,
+        "y": "x"
+    });
+    deepEqual(solver.eval('test'), {
+        "x": 2,
+        "y": 2
+    });
+});
+test("Circular definition", function () {
+    var solver = jsen.solver();
+    throws(function () {
+        solver.decl('test', {
+            'x': 'x'
+        });
+        solver.eval('test');
+    }, Error);
+    throws(function () {
+        solver.decl('test', {
+            'x': 'y',
+            'y': 'x'
+        });
+        solver.eval('test');
+    }, Error);
+});
