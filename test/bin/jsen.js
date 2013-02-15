@@ -60,3 +60,16 @@ test("Function declaration", function () {
     strictEqual(solver.eval('test', 'a'), true);
     strictEqual(solver.eval('test', 'b'), false);
 });
+test("Namespace reference ignored", function () {
+    var solver = jsen.solver();
+    solver.decl('test', {
+        "ns": "namespace:",
+        "x": 1
+    });
+    deepEqual(solver.expr('test'), {
+        "x": 1
+    });
+    deepEqual(solver.eval('test'), {
+        "x": 1
+    });
+});

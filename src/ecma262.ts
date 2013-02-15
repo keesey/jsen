@@ -1,5 +1,5 @@
 ///<reference path='./ecma262.d.ts' />
-module ecma262
+module jsen.ecma262
 {
 	export var URI = "http://ecma-international.org/ecma-262/5.1";
 

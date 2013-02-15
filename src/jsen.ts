@@ -1,6 +1,48 @@
 ///<reference path='./jsen.d.ts' />
+
+// Polyfill.
+Array.isArray || (Array.isArray = function(a)
+	{
+	    return '' + a !== a && {}.toString.call(a) === '[object Array]';
+	});
+
 module jsen
 {
+	function isNamespaceRef(expr)
+	{
+		return (typeof expr === 'string') && /:$/.test(expr);
+	}
+
+	function expandURIs(expr, nsExpr: Namespace)
+	{
+		if (typeof expr === "string")
+		{
+			var parts = expr.split(':');
+			if (parts.length >= 2)
+			{
+				var n_1 = parts.length - 1,
+					uri = parts.slice(0, n_1).join(':'),
+					uriExpr = nsExpr[uri];
+				if (isNamespaceRef(uriExpr))
+				{
+					return uriExpr + parts[n_1];
+				}
+			}
+		}
+		else if (Array.isArray(expr))
+		{
+			var n = (<any[]> expr).length,
+				i = 0,
+				a = new Array(n);
+			for ( ; i < n; ++i)
+			{
+				a[i] = expandURIs(expr[i], nsExpr);
+			}
+			return a;
+		}
+		return expr;
+	}
+
 	export class SolverImpl
 	{
 		private _eval: Namespaces;
@@ -95,7 +137,11 @@ module jsen
 					var ns = this._nsExpr(<string> a);
 					for (localName in b)
 					{
-						ns[localName] = b[localName];
+						var expr = b[localName];
+						if (!isNamespaceRef(expr))
+						{
+							ns[localName] = expandURIs(expr, b);
+						}
 					}
 				}
 			}

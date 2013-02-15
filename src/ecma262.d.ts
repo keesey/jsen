@@ -1,5 +1,5 @@
 ///<reference path='./jsen.d.ts' />
-declare module ecma262
+declare module jsen.ecma262
 {
 	export var URI: string;
 

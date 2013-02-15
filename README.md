@@ -13,9 +13,10 @@ Important Files
 * `bin/jsen.js`: JSEN as a JavaScript file.
 * `bin/jsen.min.js`: A minified version of `jsen.js`.
 * `bin/ecma262.js`: ECMA-262 namespace for JSEN.
-* `src/jsen.d.ts`: A TypeScript declaration file for JSEN.
 * `src/jsen.ts`: The TypeScript source for JSEN.
+* `src/jsen.d.ts`: A TypeScript declaration file for JSEN.
 * `src/ecma262.ts`: The TypeScript source for the ECMA-262 namespace.
+* `src/ecma262.d.ts`: A TypeScript declaration for the ECMA-262 namespace.
 * `build.sh`: UNIX shell script to build the JavaScript files from TypeScript source. Requires Java and the [TypeScript](http://typescriptlang.org/) compiler.
 
 The JSEN Format

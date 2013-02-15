@@ -3,7 +3,7 @@
 ///<reference path='../qunit/qunit.d.ts' />
 test("ECMA-262: Basic declarations", function () {
 	var solver = jsen.solver();
-    ecma262.decl(solver);
+    jsen.ecma262.decl(solver);
 	solver.decl('test',
 		{
 		    "x": <any[]> ["http://ecma-international.org/ecma-262/5.1:+",
@@ -32,7 +32,7 @@ test("ECMA-262: Basic declarations", function () {
 });
 test("ECMA-262: Referenced namespace", function () {
 	var solver = jsen.solver();
-    ecma262.decl(solver);
+    jsen.ecma262.decl(solver);
 	solver.decl('test',
 		{
 		    "js": "http://ecma-international.org/ecma-262/5.1:",
@@ -51,7 +51,7 @@ test("ECMA-262: Referenced namespace", function () {
 });
 test("ECMA-262: Referenced namespace and own identifiers", function () {
 	var solver = jsen.solver();
-    ecma262.decl(solver);
+    jsen.ecma262.decl(solver);
 	solver.decl('test',
 		{
 		    "pi": "js:Math.PI",
@@ -66,5 +66,70 @@ test("ECMA-262: Referenced namespace and own identifiers", function () {
 		"tau": Math.PI * 2
 	});
 });
+test("ECMA-262: Literals", function()
+{
+	var solver = jsen.solver();
+    jsen.ecma262.decl(solver);
+	solver.decl('test',
+		{
+		    "js": "http://ecma-international.org/ecma-262/5.1:",
 
+		    "a": "js:undefined",
+		    "b": "js:NaN",
+		    "c": "js:Infinity"
+		}
+    );
+	strictEqual(solver.eval('test', 'a'), undefined);
+	ok(isNaN(solver.eval('test', 'b')));
+	strictEqual(solver.eval('test', 'c'), Infinity);
+});
+test("ECMA-262: Accessors", function()
+{
+	var solver = jsen.solver();
+    jsen.ecma262.decl(solver);
+	solver.decl('test',
+		{
+		    "js": "http://ecma-international.org/ecma-262/5.1:",
 
+		    "a": <any[]> ["js:Array", 1, 3, 5, 7],
+		    "b": <any[]> ["js:[]", 'a', 2]
+		}
+    );
+	strictEqual(solver.eval('test', 'b'), 5);
+});
+test("ECMA-262: Operators", function()
+{
+	var solver = jsen.solver();
+    jsen.ecma262.decl(solver);
+	solver.decl('test',
+		{
+		    "js": "http://ecma-international.org/ecma-262/5.1:",
+
+		    "a": <any[]> ["js:void", 88],
+		    "b": <any[]> ["js:+", -1],
+		    "c": <any[]> ["js:+", 2, -1],
+		    "d": <any[]> ["js:+", 2, -1, 10],
+		    "e": <any[]> ["js:-", -1],
+		    "f": <any[]> ["js:-", 2, -1],
+		    "g": <any[]> ["js:-", 2, -1, 10],
+		    "h": <any[]> ["js:~", 7],
+		    "i": <any[]> ["js:!", true]
+		    // :TODO: The rest: `*`, `/`, `%`, `<<`, `>>`, `>>>`, `<`, `>`, `<=`, `>=`, `in`, `==`, `!=`, `===`, `!==`, `&`, `^`, `|`, `&&`, `||`, `?:`.
+		}
+    );
+	deepEqual(solver.eval('test'),
+	{
+		"a": undefined,
+		"b": -1,
+		"c": 1,
+		"d": 11,
+		"e": 1,
+		"f": 3,
+		"g": -7,
+		"h": -8,
+		"i": false
+	});
+});
+// :TODO: Top-level functions: `isFinite`, `isNaN`, `Array`, `Boolean`, `Number`.
+// :TODO: All constants of the `Math` object (`Math.E`, `Math.LN2`, etc.).
+// :TODO: All functions of the `Math` object (`Math.abs`, `Math.acos`, etc.).
