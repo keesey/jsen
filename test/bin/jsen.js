@@ -26,7 +26,7 @@ test("Identifier in declaration", function () {
         "y": 2
     });
 });
-test("Circular definition", function () {
+test("Circular declaration", function () {
     var solver = jsen.solver();
     throws(function () {
         solver.decl('test', {
@@ -41,4 +41,22 @@ test("Circular definition", function () {
         });
         solver.eval('test');
     }, Error);
+});
+test("Function declaration", function () {
+    var solver = jsen.solver();
+    solver.decl('test', {
+        "even": function (x) {
+            return x % 2 === 0;
+        },
+        "a": [
+            'even', 
+            2
+        ],
+        "b": [
+            'even', 
+            3
+        ]
+    });
+    strictEqual(solver.eval('test', 'a'), true);
+    strictEqual(solver.eval('test', 'b'), false);
 });

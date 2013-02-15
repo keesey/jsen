@@ -74,7 +74,7 @@ Since this sort of expression is rather verbose, JSEN allows for arbitrary refer
 	{
 		"js": "http://ecma-international.org/ecma-262/5.1:",
 
-		"x": [ "js:+" 1, 2 ],
+		"x": [ "js:+", 1, 2 ],
 		"y": [ "js:Math.sin", [ "js:/", "js:Math.PI", 2 ] ],
 		"z": [ "js:Array", 4, 5, 6 ]
 	}

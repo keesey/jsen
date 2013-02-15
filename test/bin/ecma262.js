@@ -220,7 +220,7 @@ var ecma262;
     }
     ecma262.decl = decl;
 })(ecma262 || (ecma262 = {}));
-test("Basic declarationsusing ECMA-262", function () {
+test("ECMA-262: Basic declarations", function () {
     var solver = jsen.solver();
     ecma262.decl(solver);
     solver.decl('test', {
@@ -252,5 +252,57 @@ test("Basic declarationsusing ECMA-262", function () {
             5, 
             6
         ]
+    });
+});
+test("ECMA-262: Referenced namespace", function () {
+    var solver = jsen.solver();
+    ecma262.decl(solver);
+    solver.decl('test', {
+        "js": "http://ecma-international.org/ecma-262/5.1:",
+        "x": [
+            "js:+", 
+            1, 
+            2
+        ],
+        "y": [
+            "js:Math.sin", 
+            [
+                "js:/", 
+                "js:Math.PI", 
+                2
+            ]
+        ],
+        "z": [
+            "js:Array", 
+            4, 
+            5, 
+            6
+        ]
+    });
+    deepEqual(solver.eval('test'), {
+        "x": 3,
+        "y": 1,
+        "z": [
+            4, 
+            5, 
+            6
+        ]
+    });
+});
+test("ECMA-262: Referenced namespace and own identifiers", function () {
+    var solver = jsen.solver();
+    ecma262.decl(solver);
+    solver.decl('test', {
+        "pi": "js:Math.PI",
+        "tau": [
+            "js:*", 
+            "pi", 
+            2
+        ],
+        "js": "http://ecma-international.org/ecma-262/5.1:"
+    });
+    deepEqual(solver.eval('test'), {
+        "pi": Math.PI,
+        "tau": Math.PI * 2
     });
 });
