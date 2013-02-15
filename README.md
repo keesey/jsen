@@ -135,9 +135,9 @@ The expression may be evaluated like so:
 
 To use the ECMA-262 entities:
 
-	jsen.ecma262.use();
+	jsen.ecma262.decl();
 
-Now you can use:
+Now you can use the entities:
 
 	jsen.decl('urn:my-namespace', 'my-array-id', ['http://ecma-international.org/ecma-262/5.1:Array', 1, 2]);
 	jsen.eval('urn:my-namespace', 'my-array-id'); // [1, 2]
