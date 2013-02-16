@@ -180,11 +180,23 @@ A set of namespaces may be declared or evaluated all at once:
 		{
 			'my-id': ['js:+', 10, 10]
 		}
-		
+
 	});
 	jsen.eval(); // { 'urn:my-namespace': { 'my-id': 10, 'my-array-id': [1, 2]}, 'urn:my-other-namespace': { 'my-id': 20 } /* Plus all ECMA-262 entities */ }
 
 Note that the namespace reference at the top level (`'js'`) is available in both of the declared namespaces.
+
+A function may be used as a namespace. It should expect a single argument (a local identifier).
+Its output need not be consistent (that is, it can be random), since JSEN stores evaluations.
+
+	jsen.decl({
+		'random':    Math.random,
+		'uppercase': function(localName) { return localName.toUpperCase(); }
+	});
+	jsen.eval('random', 'foo');    // A random number.
+	jsen.eval('random', 'foo');    // The same number.
+	jsen.eval('random', 'bar');    // A different random number.
+	jsen.eval('uppercase', 'foo'); // "FOO"
 
 ### Solver Instances
 
