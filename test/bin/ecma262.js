@@ -84,12 +84,12 @@ var jsen;
             }),
             "&&": and,
             "||": or,
-            "?:": function (cond, x, y) {
+            "?\\:": function (cond, x, y) {
                 return cond ? x : y;
             },
             "isFinite": isFinite,
             "isNaN": isNaN,
-            "Array": Array,
+            "Array": op_array,
             "Boolean": Boolean,
             "Number": Number,
             "Math.E": Math.E,
@@ -172,6 +172,19 @@ var jsen;
                 }
                 return result;
             }
+        }
+        function op_array() {
+            var args = [];
+            for (var _i = 0; _i < (arguments.length - 0); _i++) {
+                args[_i] = arguments[_i + 0];
+            }
+            var n = args.length;
+            if(n === 1) {
+                return [
+                    args[0]
+                ];
+            }
+            return Array.apply(null, args);
         }
         function op_logic_multiple(op) {
             return function () {
@@ -420,6 +433,125 @@ test("ECMA-262: Operators", function () {
         "i": [
             "js:!", 
             true
+        ],
+        "j": [
+            "js:*", 
+            2, 
+            3, 
+            4
+        ],
+        "k": [
+            "js:/", 
+            12, 
+            3, 
+            2
+        ],
+        "l": [
+            "js:%", 
+            4, 
+            3
+        ],
+        "m": [
+            "js:<<", 
+            1, 
+            3
+        ],
+        "n": [
+            "js:>>", 
+            129, 
+            1
+        ],
+        "o": [
+            "js:>>>", 
+            129, 
+            1
+        ],
+        "p": [
+            "js:<", 
+            5, 
+            6
+        ],
+        "q": [
+            "js:>", 
+            5, 
+            6
+        ],
+        "r": [
+            "js:<=", 
+            5, 
+            5
+        ],
+        "s": [
+            "js:>=", 
+            5, 
+            5
+        ],
+        "t": [
+            "js:in", 
+            45, 
+            [
+                "js:Array", 
+                1, 
+                2, 
+                3, 
+                4, 
+                45
+            ]
+        ],
+        "u": [
+            "js:==", 
+            null, 
+            undefined
+        ],
+        "v": [
+            "js:!=", 
+            null, 
+            undefined
+        ],
+        "w": [
+            "js:===", 
+            null, 
+            undefined
+        ],
+        "x": [
+            "js:!==", 
+            null, 
+            undefined
+        ],
+        "y": [
+            "js:&", 
+            7, 
+            13
+        ],
+        "z": [
+            "js:^", 
+            7, 
+            13
+        ],
+        "A": [
+            "js:|", 
+            7, 
+            13
+        ],
+        "B": [
+            "js:&&", 
+            true, 
+            true, 
+            true, 
+            false
+        ],
+        "C": [
+            "js:||", 
+            true, 
+            true, 
+            true, 
+            false
+        ],
+        "D": [
+            "js:?\\:", 
+            true, 
+            33, 
+            44
         ]
     });
     deepEqual(solver.eval('test'), {
@@ -431,7 +563,103 @@ test("ECMA-262: Operators", function () {
         "f": 3,
         "g": -7,
         "h": -8,
-        "i": false
+        "i": false,
+        "j": 24,
+        'k': 2,
+        'l': 1,
+        'm': 8,
+        'n': 64,
+        'o': 64,
+        'p': true,
+        'q': false,
+        'r': true,
+        's': true,
+        't': true,
+        'u': true,
+        'v': false,
+        'w': true,
+        'x': false,
+        'y': 5,
+        'z': 10,
+        'A': 15,
+        'B': false,
+        'C': true,
+        'D': 33
+    });
+});
+test("ECMA-262: Top-level functions", function () {
+    var solver = jsen.solver();
+    jsen.ecma262.decl(solver);
+    solver.decl('test', {
+        "js": "http://ecma-international.org/ecma-262/5.1:",
+        'a': [
+            'js:isFinite', 
+            'js:Infinity'
+        ],
+        'b': [
+            'js:isFinite', 
+            'js:NaN'
+        ],
+        'c': [
+            'js:isFinite', 
+            1
+        ],
+        'd': [
+            'js:isNaN', 
+            'js:NaN'
+        ],
+        'e': [
+            'js:isNaN', 
+            1
+        ],
+        'f': [
+            'js:Array'
+        ],
+        'g': [
+            'js:Array', 
+            1
+        ],
+        'h': [
+            'js:Array', 
+            1, 
+            2, 
+            3, 
+            4, 
+            5
+        ],
+        'i': [
+            'js:Boolean', 
+            0
+        ],
+        'j': [
+            'js:Boolean', 
+            1
+        ],
+        'k': [
+            'js:Number', 
+            false
+        ]
+    });
+    deepEqual(solver.eval('test'), {
+        'a': false,
+        'b': false,
+        'c': true,
+        'd': true,
+        'e': false,
+        'f': [],
+        'g': [
+            1
+        ],
+        'h': [
+            1, 
+            2, 
+            3, 
+            4, 
+            5
+        ],
+        'i': false,
+        'j': true,
+        'k': 0
     });
 });
 test("ECMA-262: Using JSEN examples", function () {

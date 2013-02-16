@@ -28,6 +28,9 @@ A **String** is interpreted as:
 * a *namespace reference*, if it ends with `":"`;
 * a *qualified identifier*, if it includes (but does not end with) `":"`; or
 * a *local identifier*, otherwise.
+Colons (`":"`) in strings may be escaped by a preceding backslash.
+Since backslashes must be escaped in JavaScript strings, this is written as two backslashes: `"\\"`.
+This does not pertain to keys used as local identifiers in namespace declarations (read on).
 
 An **Array** is interpreted as an *application of an operation*, where the first element is a string identifying the operation and the following elements (if any) are arguments.
 An empty array (`[]`) is illegal.
@@ -117,10 +120,14 @@ These include:
 
 * Literals: `undefined`, `NaN`, `Infinity`.
 * Accessors: `[]`.
-* Operators: `void`, `+`, `-`, `~`, `!`, `*`, `/`, `%`, `<<`, `>>`, `>>>`, `<`, `>`, `<=`, `>=`, `in`, `==`, `!=`, `===`, `!==`, `&`, `^`, `|`, `&&`, `||`, `?:`.
-* Top-level functions: `isFinite`, `isNaN`, `Array`, `Boolean`, `Number`.
+* Operators: `void`, `+`, `-`, `~`, `!`, `*`, `/`, `%`, `<<`, `>>`, `>>>`, `<`, `>`, `<=`, `>=`, `in`, `==`, `!=`, `===`, `!==`, `&`, `^`, `|`, `&&`, `||`, `?:`.\*
+* Top-level functions: `isFinite`, `isNaN`, `Array`,\*\* `Boolean`, `Number`.
 * All constants of the `Math` object (`Math.E`, `Math.LN2`, etc.).
 * All functions of the `Math` object (`Math.abs`, `Math.acos`, etc.).
+
+\* Note that since colons (`":"`) are reserved in JSEN identifiers, the `?:` operator's name must be written `"?\\:"`.
+
+\*\* The `Array` function has been modified so that a single argument yields an array with that as its single member (instead of using it to determine the lenght of the array).
 
 Using JSEN
 ----------

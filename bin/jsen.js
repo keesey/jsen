@@ -9,7 +9,7 @@ var jsen;
     }
     function expandURIs(expr, nsRefHolder) {
         if(typeof expr === "string") {
-            var parts = expr.split(':');
+            var parts = splitIdentifier(expr);
             if(parts.length >= 2) {
                 var n_1 = parts.length - 1, uri = parts.slice(0, n_1).join(':'), uriExpr = nsRefHolder[uri];
                 if(isNamespaceRef(uriExpr)) {
@@ -26,6 +26,29 @@ var jsen;
             }
         }
         return expr;
+    }
+    function splitIdentifier(identifier) {
+        var result = [], current = "";
+        for(var i = 0, n = identifier.length; i < n; ++i) {
+            var c = identifier.charAt(i);
+            if(c === '\\') {
+                if(i < n - 1 && identifier.charAt(i + 1) === ':') {
+                    current += ':';
+                    i++;
+                } else {
+                    current += '\\';
+                }
+            } else {
+                if(c === ':') {
+                    result.push(current);
+                    current = "";
+                } else {
+                    current += c;
+                }
+            }
+        }
+        result.push(current);
+        return result;
     }
     var SolverImpl = (function () {
         function SolverImpl() {
@@ -65,9 +88,9 @@ var jsen;
             return op.apply(null, args);
         };
         SolverImpl.prototype._evalExprString = function (uri, expr) {
-            var parts = expr.split(':'), n = parts.length;
+            var parts = splitIdentifier(expr), n = parts.length;
             if(n < 2) {
-                return this.eval(uri, expr);
+                return this.eval(uri, parts.join(":"));
             }
             return this.eval(parts.slice(0, n - 1).join(':'), parts[n - 1]);
         };

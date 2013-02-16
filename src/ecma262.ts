@@ -44,7 +44,7 @@ module jsen.ecma262
 		// Top-level functions
 		"isFinite": isFinite,
 		"isNaN": isNaN,
-		"Array": Array,
+		"Array": op_array,
 		"Boolean": Boolean,
 		"Number": Number,
 
@@ -137,6 +137,16 @@ module jsen.ecma262
 			}
 			return result;
 		};
+	}
+
+	function op_array(...args: any[])
+	{
+		var n = args.length;
+		if (n === 1)
+		{
+			return [ args[0] ];
+		}
+		return Array.apply(null, args);
 	}
 
 	function op_logic_multiple(op: (x, y) => bool)

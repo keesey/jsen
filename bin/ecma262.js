@@ -84,12 +84,12 @@ var jsen;
             }),
             "&&": and,
             "||": or,
-            "?:": function (cond, x, y) {
+            "?\\:": function (cond, x, y) {
                 return cond ? x : y;
             },
             "isFinite": isFinite,
             "isNaN": isNaN,
-            "Array": Array,
+            "Array": op_array,
             "Boolean": Boolean,
             "Number": Number,
             "Math.E": Math.E,
@@ -172,6 +172,19 @@ var jsen;
                 }
                 return result;
             }
+        }
+        function op_array() {
+            var args = [];
+            for (var _i = 0; _i < (arguments.length - 0); _i++) {
+                args[_i] = arguments[_i + 0];
+            }
+            var n = args.length;
+            if(n === 1) {
+                return [
+                    args[0]
+                ];
+            }
+            return Array.apply(null, args);
         }
         function op_logic_multiple(op) {
             return function () {

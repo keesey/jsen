@@ -138,8 +138,28 @@ test("ECMA-262: Operators", function()
 		    "f": <any[]> ["js:-", 2, -1],
 		    "g": <any[]> ["js:-", 2, -1, 10],
 		    "h": <any[]> ["js:~", 7],
-		    "i": <any[]> ["js:!", true]
-		    // :TODO: The rest: `*`, `/`, `%`, `<<`, `>>`, `>>>`, `<`, `>`, `<=`, `>=`, `in`, `==`, `!=`, `===`, `!==`, `&`, `^`, `|`, `&&`, `||`, `?:`.
+		    "i": <any[]> ["js:!", true],
+		    "j": <any[]> ["js:*", 2, 3, 4],
+		    "k": <any[]> ["js:/", 12, 3, 2],
+		    "l": <any[]> ["js:%", 4, 3],
+		    "m": <any[]> ["js:<<", 1, 3],
+		    "n": <any[]> ["js:>>", 129, 1],
+		    "o": <any[]> ["js:>>>", 129, 1],
+		    "p": <any[]> ["js:<", 5, 6],
+		    "q": <any[]> ["js:>", 5, 6],
+		    "r": <any[]> ["js:<=", 5, 5],
+		    "s": <any[]> ["js:>=", 5, 5],
+		    "t": <any[]> ["js:in", 45, <any[]> ["js:Array", 1, 2, 3, 4, 45] ],
+		    "u": <any[]> ["js:==", null, undefined],
+		    "v": <any[]> ["js:!=", null, undefined],
+		    "w": <any[]> ["js:===", null, undefined],
+		    "x": <any[]> ["js:!==", null, undefined],
+		    "y": <any[]> ["js:&", 7, 13],
+		    "z": <any[]> ["js:^", 7, 13],
+		    "A": <any[]> ["js:|", 7, 13],
+		    "B": <any[]> ["js:&&", true, true, true, false],
+		    "C": <any[]> ["js:||", true, true, true, false],
+		    "D": <any[]> ["js:?\\:", true, 33, 44]
 		}
     );
 	deepEqual(solver.eval('test'),
@@ -152,10 +172,65 @@ test("ECMA-262: Operators", function()
 		"f": 3,
 		"g": -7,
 		"h": -8,
-		"i": false
+		"i": false,
+		"j": 24,
+		'k': 2,
+		'l': 1,
+		'm': 8,
+		'n': 64,
+		'o': 64,
+		'p': true,
+		'q': false,
+		'r': true,
+		's': true,
+		't': true,
+		'u': true,
+		'v': false,
+		'w': true,
+		'x': false,
+		'y': 5,
+		'z': 10,
+		'A': 15,
+		'B': false,
+		'C': true,
+		'D': 33
 	});
 });
-// :TODO: Top-level functions: `isFinite`, `isNaN`, `Array`, `Boolean`, `Number`.
+test("ECMA-262: Top-level functions", function()
+{
+	var solver = jsen.solver();
+    jsen.ecma262.decl(solver);
+	solver.decl('test',
+	{
+	    "js": "http://ecma-international.org/ecma-262/5.1:",
+
+		'a': ['js:isFinite', 'js:Infinity'],
+		'b': ['js:isFinite', 'js:NaN'],
+		'c': <any[]> ['js:isFinite', 1],
+		'd': ['js:isNaN', 'js:NaN'],
+		'e': <any[]> ['js:isNaN', 1],
+		'f': ['js:Array'],
+		'g': <any[]> ['js:Array', 1],
+		'h': <any[]> ['js:Array', 1, 2, 3, 4, 5],
+		'i': <any[]> ['js:Boolean', 0],
+		'j': <any[]> ['js:Boolean', 1],
+		'k': <any[]> ['js:Number', false]
+	});
+	deepEqual(solver.eval('test'),
+	{
+		'a': false,
+		'b': false,
+		'c': true,
+		'd': true,
+		'e': false,
+		'f': [],
+		'g': [1],
+		'h': [1, 2, 3, 4, 5],
+		'i': false,
+		'j': true,
+		'k': 0
+	});
+});
 // :TODO: All constants of the `Math` object (`Math.E`, `Math.LN2`, etc.).
 // :TODO: All functions of the `Math` object (`Math.abs`, `Math.acos`, etc.).
 test("ECMA-262: Using JSEN examples", function()
