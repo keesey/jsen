@@ -31,6 +31,8 @@ var jsen;
         function SolverImpl() {
             this._expr = {
             };
+            this._maps = {
+            };
             this._stack = {
             };
         }
@@ -100,11 +102,15 @@ var jsen;
                 if(typeof b === "string") {
                     this._nsExpr(a)[b] = expr;
                 } else {
-                    var ns = this._nsExpr(a);
-                    for(localName in b) {
-                        expr = b[localName];
-                        if(!isNamespaceRef(expr)) {
-                            ns[localName] = expandURIs(expr, b);
+                    if(typeof b === 'function') {
+                        this._maps[a] = b;
+                    } else {
+                        var ns = this._nsExpr(a);
+                        for(localName in b) {
+                            expr = b[localName];
+                            if(!isNamespaceRef(expr)) {
+                                ns[localName] = expandURIs(expr, b);
+                            }
                         }
                     }
                 }
@@ -144,11 +150,16 @@ var jsen;
                     }
                     this._stack[qName] = true;
                     try  {
-                        value = sourceNS[localName] = this._evalExpr(uri, this._nsExpr(uri)[localName]);
+                        var nsExpr = this._nsExpr(uri);
+                        if(!nsExpr.hasOwnProperty(localName) && typeof this._maps[uri] === 'function') {
+                            value = this._maps[uri](localName);
+                        } else {
+                            value = this._evalExpr(uri, nsExpr[localName]);
+                        }
                     }finally {
                         delete this._stack[qName];
                     }
-                    return value;
+                    return sourceNS[localName] = value;
                 }
                 var resultNS = {
                 }, sourceExprNS = this._nsExpr(uri);

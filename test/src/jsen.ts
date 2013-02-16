@@ -56,7 +56,6 @@ test("Function declaration", function() {
     strictEqual(solver.eval('test', 'a'), true);
     strictEqual(solver.eval('test', 'b'), false);
 });
-
 test("Namespace reference ignored", function() {
     var solver = jsen.solver();
     solver.decl('test',
@@ -83,4 +82,26 @@ test("Namespaces-level namespace reference", function() {
         }
     });
     strictEqual(solver.eval('namespaceB', 'y'), 12);
+});
+test("Function as namespace", function() {
+    var solver = jsen.solver();
+    solver.decl({
+        'uppercase': (localName: string) => localName.toUpperCase(),
+        'random': Math.random,
+        'test':
+        {
+            'a': 'uppercase:FOO',
+            'b': 'uppercase:bar'
+        }
+    });
+    deepEqual(solver.eval('test'),
+    {
+        "a": 'FOO',
+        "b": 'BAR'
+    });
+    var x = solver.eval('random', 'foo');
+    var y = solver.eval('random', 'foo');
+    var z = solver.eval('random', 'bar');
+    strictEqual(x, y);
+    notEqual(x, z);
 });

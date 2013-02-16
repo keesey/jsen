@@ -47,6 +47,7 @@ module jsen
 	{
 		private _eval: Namespaces;
 		private _expr: Namespaces = {};
+		private _maps: Namespace = {};
 		private _stack = {};
 		private _evalExpr(uri: string, expr: any): any
 		{
@@ -135,6 +136,10 @@ module jsen
 				{
 					this._nsExpr(<string> a)[b] = expr;
 				}
+				else if (typeof b === 'function')
+				{
+					this._maps[a] = b;
+				}
 				else 
 				{
 					var ns = this._nsExpr(<string> a);
@@ -196,13 +201,21 @@ module jsen
 					this._stack[qName] = true;
 					try
 					{
-						value = sourceNS[localName] = this._evalExpr(uri, this._nsExpr(uri)[localName]);
+						var nsExpr = this._nsExpr(uri);
+						if (!nsExpr.hasOwnProperty(localName) && typeof this._maps[uri] === 'function')
+						{
+							value = this._maps[uri](localName);
+						}
+						else
+						{
+							value = this._evalExpr(uri, nsExpr[localName]);
+						}
 					}
 					finally
 					{
 						delete this._stack[qName];
 					}
-					return value;
+					return sourceNS[localName] = value;
 				}
 				var resultNS: Namespace = {},
 					sourceExprNS = this._nsExpr(uri);
