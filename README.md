@@ -25,7 +25,7 @@ The JSEN Format
 JSEN is JavaScript wherein values are interpreted as expressions.
 
 A **String** is interpreted as:
-* a *namespace reference*, if it ends with `":"`;
+* a *namespace reference*, if it ends with `":"` (but not with `"\\:"`);
 * a *qualified identifier*, if it includes (but does not end with) `":"`; or
 * a *local identifier*, otherwise.
 Colons (`":"`) in strings may be escaped by a preceding backslash.

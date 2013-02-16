@@ -2,11 +2,11 @@ module jsen
 {
 	export interface Namespace
 	{
-		[localName: string]: any;
+		[localNameOrAbbr: string]: any;
 	}
 	export interface Namespaces
 	{
-		[uri: string]: Namespace;
+		[uriOrAbbr: string]: any;
 	}
 	export interface Solver
 	{

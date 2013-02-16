@@ -5,22 +5,22 @@ Array.isArray || (Array.isArray = function (a) {
 var jsen;
 (function (jsen) {
     function isNamespaceRef(expr) {
-        return (typeof expr === 'string') && /:$/.test(expr);
+        return (typeof expr === 'string') && /[^\\]:$/.test(expr);
     }
-    function expandURIs(expr, nsRefHolder) {
+    function expandNamespaceRefs(expr, nsRefHolder) {
         if(typeof expr === "string") {
             var parts = splitIdentifier(expr);
             if(parts.length >= 2) {
                 var n_1 = parts.length - 1, uri = parts.slice(0, n_1).join(':'), uriExpr = nsRefHolder[uri];
                 if(isNamespaceRef(uriExpr)) {
-                    return uriExpr + parts[n_1];
+                    return uriExpr + parts[n_1].replace(':', '\\:');
                 }
             }
         } else {
             if(Array.isArray(expr)) {
                 var n = (expr).length, i = 0, a = new Array(n);
                 for(; i < n; ++i) {
-                    a[i] = expandURIs(expr[i], nsRefHolder);
+                    a[i] = expandNamespaceRefs(expr[i], nsRefHolder);
                 }
                 return a;
             }
@@ -49,6 +49,29 @@ var jsen;
         }
         result.push(current);
         return result;
+    }
+    function trickleNamespaceRefs(namespaces, ns) {
+        var refs = {
+        }, hasRefs = false, uri;
+        for(uri in namespaces) {
+            var expr = namespaces[uri];
+            if(isNamespaceRef(expr)) {
+                refs[uri] = expr;
+                hasRefs = true;
+            }
+        }
+        if(!hasRefs) {
+            return ns;
+        }
+        var ns2 = {
+        }, localName;
+        for(localName in refs) {
+            ns2[localName] = refs[localName];
+        }
+        for(localName in ns) {
+            ns2[localName] = ns[localName];
+        }
+        return ns2;
     }
     var SolverImpl = (function () {
         function SolverImpl() {
@@ -132,7 +155,7 @@ var jsen;
                         for(localName in b) {
                             expr = b[localName];
                             if(!isNamespaceRef(expr)) {
-                                ns[localName] = expandURIs(expr, b);
+                                ns[localName] = expandNamespaceRefs(expr, b);
                             }
                         }
                     }
@@ -140,19 +163,8 @@ var jsen;
             } else {
                 for(uri in a) {
                     expr = a[uri];
-                    if(isNamespaceRef(expr)) {
-                        for(uri2 in a) {
-                            expr2 = a[uri2];
-                            if(!isNamespaceRef(expr2) && !expr2.hasOwnProperty(uri)) {
-                                expr2[uri] = expr;
-                            }
-                        }
-                    }
-                }
-                for(uri in a) {
-                    expr = a[uri];
                     if(!isNamespaceRef(expr)) {
-                        this.decl(uri, expr);
+                        this.decl(uri, trickleNamespaceRefs(a, expr));
                     }
                 }
             }

@@ -84,7 +84,7 @@ var jsen;
             }),
             "&&": and,
             "||": or,
-            "?\\:": function (cond, x, y) {
+            "?:": function (cond, x, y) {
                 return cond ? x : y;
             },
             "isFinite": isFinite,
@@ -488,14 +488,12 @@ test("ECMA-262: Operators", function () {
         ],
         "t": [
             "js:in", 
-            45, 
+            1, 
             [
                 "js:Array", 
-                1, 
-                2, 
-                3, 
-                4, 
-                45
+                10, 
+                20, 
+                30
             ]
         ],
         "u": [
@@ -577,8 +575,8 @@ test("ECMA-262: Operators", function () {
         't': true,
         'u': true,
         'v': false,
-        'w': true,
-        'x': false,
+        'w': false,
+        'x': true,
         'y': 5,
         'z': 10,
         'A': 15,

@@ -10,10 +10,10 @@ module jsen
 {
 	function isNamespaceRef(expr)
 	{
-		return (typeof expr === 'string') && /:$/.test(expr);
+		return (typeof expr === 'string') && /[^\\]:$/.test(expr);
 	}
 
-	function expandURIs(expr, nsRefHolder: Namespace)
+	function expandNamespaceRefs(expr, nsRefHolder: Namespace): any
 	{
 		if (typeof expr === "string")
 		{
@@ -25,7 +25,7 @@ module jsen
 					uriExpr = nsRefHolder[uri];
 				if (isNamespaceRef(uriExpr))
 				{
-					return uriExpr + parts[n_1];
+					return uriExpr + parts[n_1].replace(':', '\\:');
 				}
 			}
 		}
@@ -36,7 +36,7 @@ module jsen
 				a = new Array(n);
 			for ( ; i < n; ++i)
 			{
-				a[i] = expandURIs(expr[i], nsRefHolder);
+				a[i] = expandNamespaceRefs(expr[i], nsRefHolder);
 			}
 			return a;
 		}
@@ -74,6 +74,37 @@ module jsen
 		}
 		result.push(current);
 		return result;
+	}
+
+	function trickleNamespaceRefs(namespaces: Namespaces, ns: Namespace): Namespace
+	{
+		var refs = {},
+			hasRefs = false,
+			uri: string;
+		for (uri in namespaces)
+		{
+			var expr = namespaces[uri];
+			if (isNamespaceRef(expr))
+			{
+				refs[uri] = expr;
+				hasRefs = true;
+			}
+		}
+		if (!hasRefs)
+		{
+			return ns;
+		}
+		var ns2: Namespace = {},
+			localName: string;
+		for (localName in refs)
+		{
+			ns2[localName] = refs[localName];
+		}
+		for (localName in ns)
+		{
+			ns2[localName] = ns[localName];
+		}
+		return ns2;
 	}
 
 	export class SolverImpl
@@ -181,7 +212,7 @@ module jsen
 						expr = b[localName];
 						if (!isNamespaceRef(expr))
 						{
-							ns[localName] = expandURIs(expr, b);
+							ns[localName] = expandNamespaceRefs(expr, b);
 						}
 					}
 				}
@@ -191,24 +222,9 @@ module jsen
 				for (uri in a)
 				{
 					expr = a[uri];
-					if (isNamespaceRef(expr))
-					{
-						for (uri2 in a)
-						{
-							expr2 = a[uri2];
-							if (!isNamespaceRef(expr2) && !expr2.hasOwnProperty(uri))
-							{
-								expr2[uri] = expr;
-							}
-						}	
-					}
-				}
-				for (uri in a)
-				{
-					expr = a[uri];
 					if (!isNamespaceRef(expr))
 					{
-						this.decl(uri, expr);
+						this.decl(uri, trickleNamespaceRefs(a, expr));
 					}
 				}
 			}

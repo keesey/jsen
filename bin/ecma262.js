@@ -84,7 +84,7 @@ var jsen;
             }),
             "&&": and,
             "||": or,
-            "?\\:": function (cond, x, y) {
+            "?:": function (cond, x, y) {
                 return cond ? x : y;
             },
             "isFinite": isFinite,
