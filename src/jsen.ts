@@ -197,29 +197,6 @@ module jsen
 			}
 			return resultSpaces;
 		}
-		expr(uri?: string = null, localName?: string = null): any
-		{
-			if (typeof uri === "string")
-			{
-				var sourceNS = this._nsExpr(uri);
-				if (typeof localName === "string")
-				{
-					return sourceNS[localName];
-				}
-				var resultNS: Namespace = {};
-				for (localName in sourceNS)
-				{
-					resultNS[localName] = sourceNS[localName];
-				}
-				return resultNS;
-			}
-			var resultSpaces: Namespaces = {};
-			for (uri in this._expr)
-			{
-				resultSpaces[uri] = this.expr(uri);
-			}
-			return resultSpaces;
-		}
 	}
 	
 	var _solver = new SolverImpl();
@@ -232,11 +209,6 @@ module jsen
 	export function eval(uri?: string = null, localName?: string = null): any
 	{
 		return _solver.eval(uri, localName);
-	}
-
-	export function expr(uri?: string = null, localName?: string = null): any
-	{
-		return _solver.expr(uri, localName);
 	}
 	
 	export function solver()

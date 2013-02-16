@@ -143,7 +143,6 @@ test("ECMA-262: Using JSEN examples", function()
 	jsen.ecma262.decl();
 	jsen.decl('urn:my-namespace', 'my-array-id', <any[]> ['http://ecma-international.org/ecma-262/5.1:Array', 1, 2]);
 	deepEqual(jsen.eval('urn:my-namespace', 'my-array-id'), [1, 2]);
-	deepEqual(jsen.expr('urn:my-namespace', 'my-array-id'), <any[]> ['http://ecma-international.org/ecma-262/5.1:Array', 1, 2]);
 	jsen.decl('urn:my-namespace', {
 		'js': 'http://ecma-international.org/ecma-262/5.1:',
 
@@ -151,7 +150,6 @@ test("ECMA-262: Using JSEN examples", function()
 		'my-array-id': <any[]> ['js:Array', 1, 2]
 	});
 	deepEqual(jsen.eval('urn:my-namespace'), { 'my-id': 10, 'my-array-id': [1, 2]});
-	deepEqual(jsen.expr('urn:my-namespace'), { 'my-id': 10, 'my-array-id': <any[]> ['http://ecma-international.org/ecma-262/5.1:Array', 1, 2]});
 	jsen.decl({
 		'urn:my-namespace': {
 			'js': 'http://ecma-international.org/ecma-262/5.1:',
@@ -164,7 +162,6 @@ test("ECMA-262: Using JSEN examples", function()
 		}
 	});
 	deepEqual(jsen.eval(), { 'urn:my-namespace': { 'my-id': 10, 'my-array-id': [1, 2]}, 'urn:my-other-namespace': { 'my-id': 20 }, 'http://ecma-international.org/ecma-262/5.1': jsen.eval(jsen.ecma262.URI) });
-	deepEqual(jsen.expr(), { 'urn:my-namespace': { 'my-id': 10, 'my-array-id': <any[]> ['http://ecma-international.org/ecma-262/5.1:Array', 1, 2]}, 'urn:my-other-namespace': { 'my-id': 20 }, 'http://ecma-international.org/ecma-262/5.1': jsen.expr(jsen.ecma262.URI) });
 
 	var solver = jsen.solver();
 	jsen.ecma262.decl(solver); // To make ECMA-262 entities available.
@@ -180,5 +177,4 @@ test("ECMA-262: Using JSEN examples", function()
 		}
 	});
 	deepEqual(solver.eval(), { 'urn:my-namespace': { 'my-id': 33, 'my-array-id': [5, 6, 7]}, 'urn:my-other-namespace': { 'my-id': 44 }, 'http://ecma-international.org/ecma-262/5.1': jsen.eval(jsen.ecma262.URI) });
-	deepEqual(solver.expr(), { 'urn:my-namespace': { 'my-id': 33, 'my-array-id': <any[]> ['http://ecma-international.org/ecma-262/5.1:Array', 5, 6, 7]}, 'urn:my-other-namespace': { 'my-id': 44 }, 'http://ecma-international.org/ecma-262/5.1': jsen.expr(jsen.ecma262.URI) });
 });

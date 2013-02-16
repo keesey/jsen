@@ -33,7 +33,7 @@ An **Array** is interpreted as an *application of an operation*, where the first
 An empty array (`[]`) is illegal.
 
 An **Object** (associative array) is interpreted either as:
-* a set of *declarations*, where each key is a [local] identifier and each value is an evaluable expression, or
+* a set of *declarations*, where each key is a local identifier and each value is an evaluable expression, or
 * a *namespace*, where each key is a [URI](http://tools.ietf.org/html/rfc3986) and each value is a set of declarations.
 
 All other value types (**Null**, **Boolean**, **Number**, **Function**, nested objects, etc.) are interpreted as *themselves*.
@@ -70,7 +70,7 @@ Using this, expressions like the following may be formed:
 
 When evaluated, `"x"` will yield `3` (JavaScript: `1 + 2`), `"y"` will yield `1` (JavaScript: `Math.sin(Math.PI / 2)`), and `"z"` will yield `[4, 5, 6]` (JavaScript: `Array(4, 5, 6)`).
 
-Since this sort of expression is rather verbose, JSEN allows for arbitrary references to namespaces:
+Since the repeated URI makes this expression rather verbose, JSEN allows for arbitrary references to namespaces:
 
 	{
 		"js": "http://ecma-international.org/ecma-262/5.1:",
@@ -104,13 +104,13 @@ All of the expressions listed so far are JSON, but non-JSON JavaScript may also 
 
 	{
 		"even": function( x ) { return x % 2 === 0; },
-		"a":    [ 'even', 2 ],
-		"b":    [ 'even', 3 ]
+		"a":    [ "even", 2 ],
+		"b":    [ "even", 3 ]
 	}
 
 When evaluated, `"a"` will yield `true` and `"b"` will yield `false`.
 
-### The ECMA-262 5.1 Namespace
+### The ECMA-262 Namespace
 
 As mentioned earlier, JSEN optionally provides a namespace, identified by the URI `"http://ecma-international.org/ecma-262/5.1"`, for certain elements of the ECMA-262 standard.
 These include:
@@ -147,9 +147,7 @@ Now you can use the entities:
 	jsen.decl('urn:my-namespace', 'my-array-id', ['http://ecma-international.org/ecma-262/5.1:Array', 1, 2]);
 	jsen.eval('urn:my-namespace', 'my-array-id'); // [1, 2]
 
-You can also retrieve the expression associated with an identifier:
-
-	jsen.expr('urn:my-namespace', 'my-array-id'); // ['http://ecma-international.org/ecma-262/5.1:Array', 1, 2]
+For convenience, the ECMA-262 URI is available as a constant: `jsen.ecma262.URI`.
 
 Namespaces may be declared all at once. When this is done, you may use abbreviated namespace references:
 
@@ -160,14 +158,13 @@ Namespaces may be declared all at once. When this is done, you may use abbreviat
 		'my-array-id': ['js:Array', 1, 2]
 	});
 
-You may also retrieve the values or expressions of a namespace all at once:
+You may also evaluate every identifier in a namespace at once:
 
 	jsen.eval('urn:my-namespace'); // { 'my-id': 10, 'my-array-id': [1, 2]}
-	jsen.expr('urn:my-namespace'); // { 'my-id': 10, 'my-array-id': ['http://ecma-international.org/ecma-262/5.1:Array', 1, 2]}
 
 Note that the namespace reference is expanded into a URI when the expression is retrieved.
 
-A set of namespaces may be declared, evaluated, or expressed all at once:
+A set of namespaces may be declared or evaluated all at once:
 
 	jsen.decl({
 		'urn:my-namespace': {
@@ -181,7 +178,6 @@ A set of namespaces may be declared, evaluated, or expressed all at once:
 		}
 	});
 	jsen.eval(); // { 'urn:my-namespace': { 'my-id': 10, 'my-array-id': [1, 2]}, 'urn:my-other-namespace': { 'my-id': 20 } /* Plus all ECMA-262 entities */ }
-	jsen.expr(); // { 'urn:my-namespace': { 'my-id': 10, 'my-array-id': ['http://ecma-international.org/ecma-262/5.1:Array', 1, 2]}, 'urn:my-other-namespace': { 'my-id': 20 } /* Plus all ECMA-262 entities */ }
 
 ### Solver Instances
 
@@ -191,7 +187,7 @@ To create a solver instance:
 
 	var solver = jsen.solver();
 
-Now you can use all the global functions in the same manner:
+Now you can use all the functions in the same manner as the global functions:
 
 	jsen.ecma262.decl(solver); // To make ECMA-262 entities available.
 	solver.decl({
@@ -206,4 +202,3 @@ Now you can use all the global functions in the same manner:
 		}
 	});
 	solver.eval(); // { 'urn:my-namespace': { 'my-id': 33, 'my-array-id': [5, 6, 7]}, 'urn:my-other-namespace': { 'my-id': 44 } /* Plus all ECMA-262 entities */ }
-	solver.expr(); // { 'urn:my-namespace': { 'my-id': 33, 'my-array-id': ['http://ecma-international.org/ecma-262/5.1:Array', 5, 6, 7]}, 'urn:my-other-namespace': { 'my-id': 44 } /* Plus all ECMA-262 entities */ }

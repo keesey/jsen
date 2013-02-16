@@ -150,28 +150,6 @@ var jsen;
             }
             return resultSpaces;
         };
-        SolverImpl.prototype.expr = function (uri, localName) {
-            if (typeof uri === "undefined") { uri = null; }
-            if (typeof localName === "undefined") { localName = null; }
-            if(typeof uri === "string") {
-                var sourceNS = this._nsExpr(uri);
-                if(typeof localName === "string") {
-                    return sourceNS[localName];
-                }
-                var resultNS = {
-                };
-                for(localName in sourceNS) {
-                    resultNS[localName] = sourceNS[localName];
-                }
-                return resultNS;
-            }
-            var resultSpaces = {
-            };
-            for(uri in this._expr) {
-                resultSpaces[uri] = this.expr(uri);
-            }
-            return resultSpaces;
-        };
         return SolverImpl;
     })();
     jsen.SolverImpl = SolverImpl;    
@@ -188,12 +166,6 @@ var jsen;
         return _solver.eval(uri, localName);
     }
     jsen.eval = eval;
-    function expr(uri, localName) {
-        if (typeof uri === "undefined") { uri = null; }
-        if (typeof localName === "undefined") { localName = null; }
-        return _solver.expr(uri, localName);
-    }
-    jsen.expr = expr;
     function solver() {
         return new SolverImpl();
     }

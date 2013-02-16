@@ -64,10 +64,6 @@ test("Namespace reference ignored", function() {
         "ns": "namespace:",
         "x":  1
     });
-    deepEqual(solver.expr('test'),
-    {
-        "x": 1
-    });
     deepEqual(solver.eval('test'),
     {
         "x": 1
