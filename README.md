@@ -167,17 +167,24 @@ Note that the namespace reference is expanded into a URI when the expression is 
 A set of namespaces may be declared or evaluated all at once:
 
 	jsen.decl({
-		'urn:my-namespace': {
-			'js': 'http://ecma-international.org/ecma-262/5.1:',
 
+		'js': 'http://ecma-international.org/ecma-262/5.1:',
+
+		'urn:my-namespace':
+		{
 			'my-id': 10,
 			'my-array-id': ['js:Array', 1, 2]
 		},
-		'urn:my-other-namespace': {
-			'my-id': 20
+
+		'urn:my-other-namespace':
+		{
+			'my-id': ['js:+', 10, 10]
 		}
+		
 	});
 	jsen.eval(); // { 'urn:my-namespace': { 'my-id': 10, 'my-array-id': [1, 2]}, 'urn:my-other-namespace': { 'my-id': 20 } /* Plus all ECMA-262 entities */ }
+
+Note that the namespace reference at the top level (`'js'`) is available in both of the declared namespaces.
 
 ### Solver Instances
 

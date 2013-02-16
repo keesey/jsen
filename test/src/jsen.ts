@@ -69,3 +69,18 @@ test("Namespace reference ignored", function() {
         "x": 1
     });
 });
+test("Namespaces-level namespace reference", function() {
+    var solver = jsen.solver();
+    solver.decl({
+        'A': 'namespaceA:',
+        'namespaceA':
+        {
+            'x':  12
+        },
+        'namespaceB':
+        {
+            'y': 'A:x'
+        }
+    });
+    strictEqual(solver.eval('namespaceB', 'y'), 12);
+});

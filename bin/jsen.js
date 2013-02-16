@@ -7,11 +7,11 @@ var jsen;
     function isNamespaceRef(expr) {
         return (typeof expr === 'string') && /:$/.test(expr);
     }
-    function expandURIs(expr, nsExpr) {
+    function expandURIs(expr, nsRefHolder) {
         if(typeof expr === "string") {
             var parts = expr.split(':');
             if(parts.length >= 2) {
-                var n_1 = parts.length - 1, uri = parts.slice(0, n_1).join(':'), uriExpr = nsExpr[uri];
+                var n_1 = parts.length - 1, uri = parts.slice(0, n_1).join(':'), uriExpr = nsRefHolder[uri];
                 if(isNamespaceRef(uriExpr)) {
                     return uriExpr + parts[n_1];
                 }
@@ -20,7 +20,7 @@ var jsen;
             if(Array.isArray(expr)) {
                 var n = (expr).length, i = 0, a = new Array(n);
                 for(; i < n; ++i) {
-                    a[i] = expandURIs(expr[i], nsExpr);
+                    a[i] = expandURIs(expr[i], nsRefHolder);
                 }
                 return a;
             }
@@ -94,7 +94,7 @@ var jsen;
             if (typeof a === "undefined") { a = null; }
             if (typeof b === "undefined") { b = null; }
             if (typeof expr === "undefined") { expr = null; }
-            var uri, localName;
+            var uri, uri2, localName, expr, expr2;
             this._eval = null;
             if(typeof a === "string") {
                 if(typeof b === "string") {
@@ -102,7 +102,7 @@ var jsen;
                 } else {
                     var ns = this._nsExpr(a);
                     for(localName in b) {
-                        var expr = b[localName];
+                        expr = b[localName];
                         if(!isNamespaceRef(expr)) {
                             ns[localName] = expandURIs(expr, b);
                         }
@@ -110,7 +110,21 @@ var jsen;
                 }
             } else {
                 for(uri in a) {
-                    this.decl(uri, a[uri]);
+                    expr = a[uri];
+                    if(isNamespaceRef(expr)) {
+                        for(uri2 in a) {
+                            expr2 = a[uri2];
+                            if(!isNamespaceRef(expr2) && !expr2.hasOwnProperty(uri)) {
+                                expr2[uri] = expr;
+                            }
+                        }
+                    }
+                }
+                for(uri in a) {
+                    expr = a[uri];
+                    if(!isNamespaceRef(expr)) {
+                        this.decl(uri, expr);
+                    }
                 }
             }
             return this;

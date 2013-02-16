@@ -13,7 +13,7 @@ module jsen
 		return (typeof expr === 'string') && /:$/.test(expr);
 	}
 
-	function expandURIs(expr, nsExpr: Namespace)
+	function expandURIs(expr, nsRefHolder: Namespace)
 	{
 		if (typeof expr === "string")
 		{
@@ -22,7 +22,7 @@ module jsen
 			{
 				var n_1 = parts.length - 1,
 					uri = parts.slice(0, n_1).join(':'),
-					uriExpr = nsExpr[uri];
+					uriExpr = nsRefHolder[uri];
 				if (isNamespaceRef(uriExpr))
 				{
 					return uriExpr + parts[n_1];
@@ -36,7 +36,7 @@ module jsen
 				a = new Array(n);
 			for ( ; i < n; ++i)
 			{
-				a[i] = expandURIs(expr[i], nsExpr);
+				a[i] = expandURIs(expr[i], nsRefHolder);
 			}
 			return a;
 		}
@@ -124,7 +124,10 @@ module jsen
 		decl(a?: any = null, b?: any = null, expr?: any = null): Solver
 		{
 			var uri: string,
-				localName: string;
+				uri2: string,
+				localName: string,
+				expr,
+				expr2;
 			this._eval = null;
 			if (typeof a === "string")
 			{
@@ -137,7 +140,7 @@ module jsen
 					var ns = this._nsExpr(<string> a);
 					for (localName in b)
 					{
-						var expr = b[localName];
+						expr = b[localName];
 						if (!isNamespaceRef(expr))
 						{
 							ns[localName] = expandURIs(expr, b);
@@ -149,7 +152,26 @@ module jsen
 			{
 				for (uri in a)
 				{
-					this.decl(uri, a[uri]);
+					expr = a[uri];
+					if (isNamespaceRef(expr))
+					{
+						for (uri2 in a)
+						{
+							expr2 = a[uri2];
+							if (!isNamespaceRef(expr2) && !expr2.hasOwnProperty(uri))
+							{
+								expr2[uri] = expr;
+							}
+						}	
+					}
+				}
+				for (uri in a)
+				{
+					expr = a[uri];
+					if (!isNamespaceRef(expr))
+					{
+						this.decl(uri, expr);
+					}
 				}
 			}
 			return <Solver> this;

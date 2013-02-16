@@ -49,6 +49,31 @@ test("ECMA-262: Referenced namespace", function () {
 		"z": [4, 5, 6]
 	});
 });
+test("ECMA-262: Top-level referenced namespace", function () {
+	var solver = jsen.solver();
+    jsen.ecma262.decl(solver);
+	solver.decl({
+		'js': 'http://ecma-international.org/ecma-262/5.1:',
+		'urn:my-namespace':
+		{
+			'my-id': 10,
+			'my-array-id': <any[]> ['js:Array', 1, 2]
+		},
+		'urn:my-other-namespace':
+		{
+			'my-id': <any[]> ['js:+', 10, 10]
+		}
+	});
+	deepEqual(solver.eval('urn:my-namespace'),
+	{
+		"my-id": 10,
+		"my-array-id": [1, 2]
+	});
+	deepEqual(solver.eval('urn:my-other-namespace'),
+	{
+		"my-id": 20
+	});
+});
 test("ECMA-262: Referenced namespace and own identifiers", function () {
 	var solver = jsen.solver();
     jsen.ecma262.decl(solver);
