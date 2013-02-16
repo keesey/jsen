@@ -28,6 +28,7 @@ A **String** is interpreted as:
 * a *namespace reference*, if it ends with `":"` (but not with `"\\:"`);
 * a *qualified identifier*, if it includes (but does not end with) `":"`; or
 * a *local identifier*, otherwise.
+
 Colons (`":"`) in strings may be escaped by a preceding backslash.
 Since backslashes must be escaped in JavaScript strings, this is written as two backslashes: `"\\"`.
 This does not pertain to keys used as local identifiers in namespace declarations (read on).
@@ -127,7 +128,7 @@ These include:
 
 \* Note that since colons (`":"`) are reserved in JSEN identifiers, the `?:` operator's name must be written `"?\\:"`.
 
-\*\* The `Array` function has been modified so that a single argument yields an array with that as its single member (instead of using it to determine the lenght of the array).
+\*\* The `Array` function has been modified so that a single argument yields an array with that as its single member (instead of using it to determine the length of the array).
 
 Using JSEN
 ----------
