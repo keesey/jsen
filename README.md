@@ -44,12 +44,16 @@ All other value types (**Null**, **Boolean**, **Number**, **Function**, nested o
 
 ### Examples
 
+#### Constants
+
 Here is a JSEN declaration for a namespace whose local identifiers represent approximations of numerical constants:
 
 	{
 		"e": 2.718281828459045,
 		"pi": 3.141592653589793
 	}
+
+#### ECMA-262 Entities
 
 The JSEN library optionally includes a namespace with the URI `"http://ecma-international.org/ecma-262/5.1"` that contains certain elements of the ECMA-262 standard.
 Using this, expressions like the following may be formed:
@@ -74,7 +78,22 @@ Using this, expressions like the following may be formed:
 
 When evaluated, `"x"` will yield `3` (JavaScript: `1 + 2`), `"y"` will yield `1` (JavaScript: `Math.sin(Math.PI / 2)`), and `"z"` will yield `[4, 5, 6]` (JavaScript: `Array(4, 5, 6)`).
 
-Since the repeated URI makes this expression rather verbose, JSEN allows for arbitrary references to namespaces:
+The available ECMA-262 entities are:
+
+* Literals: `undefined`, `NaN`, `Infinity`.
+* Accessors: `[]`.
+* Operators: `void`, `+`, `-`, `~`, `!`, `*`, `/`, `%`, `<<`, `>>`, `>>>`, `<`, `>`, `<=`, `>=`, `in`, `==`, `!=`, `===`, `!==`, `&`, `^`, `|`, `&&`, `||`, `?:`.**\***
+* Top-level functions: `isFinite`, `isNaN`, `Array`,**\*\*** `Boolean`, `Number`.
+* All constants of the `Math` object (`Math.E`, `Math.LN2`, etc.).
+* All functions of the `Math` object (`Math.abs`, `Math.acos`, etc.).
+
+**\*** Note that since colons (`":"`) are reserved in JSEN identifiers, the `?:` operator's name must be written `"?\\:"`.
+
+**\*\*** The `Array` function has been modified so that a single argument yields an array with that as its single member (instead of using it to determine the length of the array).
+
+#### Namespace References
+
+Since repeated URIs can make expressions rather verbose, JSEN allows for arbitrary references to namespaces:
 
 	{
 		"js": "http://ecma-international.org/ecma-262/5.1:",
@@ -85,6 +104,8 @@ Since the repeated URI makes this expression rather verbose, JSEN allows for arb
 	}
 
 These references only pertain to the namespaces they were declared under, and are not externally accessible.
+
+#### Notes on Identifiers
 
 Identifiers may be declared in any order, and may refer to other identifiers.
 Within a namespace local names may be used.
@@ -104,6 +125,8 @@ The following expression is illegal:
 		"y": "x"
 	}
 
+#### Non-JSON JavaScript
+
 All of the expressions listed so far are JSON, but non-JSON JavaScript may also be used for values not possible under JSON (such as functions):
 
 	{
@@ -114,26 +137,12 @@ All of the expressions listed so far are JSON, but non-JSON JavaScript may also 
 
 When evaluated, `"a"` will yield `true` and `"b"` will yield `false`.
 
-### The ECMA-262 Namespace
-
-As mentioned earlier, JSEN optionally provides a namespace, identified by the URI `"http://ecma-international.org/ecma-262/5.1"`, for certain elements of the ECMA-262 standard.
-These include:
-
-* Literals: `undefined`, `NaN`, `Infinity`.
-* Accessors: `[]`.
-* Operators: `void`, `+`, `-`, `~`, `!`, `*`, `/`, `%`, `<<`, `>>`, `>>>`, `<`, `>`, `<=`, `>=`, `in`, `==`, `!=`, `===`, `!==`, `&`, `^`, `|`, `&&`, `||`, `?:`.\*
-* Top-level functions: `isFinite`, `isNaN`, `Array`,\*\* `Boolean`, `Number`.
-* All constants of the `Math` object (`Math.E`, `Math.LN2`, etc.).
-* All functions of the `Math` object (`Math.abs`, `Math.acos`, etc.).
-
-\* Note that since colons (`":"`) are reserved in JSEN identifiers, the `?:` operator's name must be written `"?\\:"`.
-
-\*\* The `Array` function has been modified so that a single argument yields an array with that as its single member (instead of using it to determine the length of the array).
-
 Using JSEN
 ----------
 
-The simplest way to use JSEN is to use the **global** functions. To declare an identifier as representing the value of an expression:
+### Global Functions
+
+The simplest way to use JSEN is to use the **global functions**. To declare an identifier as representing the value of an expression:
 
 	jsen.decl('urn:my-namespace', 'my-id', 10); // The last argument can be any JSEN expression.
 
@@ -146,6 +155,8 @@ Declarations may be chained:
 	jsen.decl('urn:my-namespace', 'my-id', 10)
 	    .decl('urn:my-namespace', 'my-id-2', 20);
 
+#### EMCA-262 Entities
+
 To use the ECMA-262 entities:
 
 	jsen.ecma262.decl();
@@ -156,6 +167,8 @@ Now you can use the entities:
 	jsen.eval('urn:my-namespace', 'my-array-id'); // [1, 2]
 
 For convenience, the ECMA-262 URI is available as a constant: `jsen.ecma262.URI`.
+
+#### Declaring and Evaluating an Entire Namespace
 
 Namespaces may be declared all at once. When this is done, you may use abbreviated namespace references:
 
@@ -170,7 +183,7 @@ You may also evaluate every identifier in a namespace at once:
 
 	jsen.eval('urn:my-namespace'); // { 'my-id': 10, 'my-array-id': [1, 2]}
 
-Note that the namespace reference is expanded into a URI when the expression is retrieved.
+#### Declaring and Evaluating Multiple Namespaces
 
 A set of namespaces may be declared or evaluated all at once:
 
@@ -193,6 +206,8 @@ A set of namespaces may be declared or evaluated all at once:
 	jsen.eval(); // { 'urn:my-namespace': { 'my-id': 10, 'my-array-id': [1, 2]}, 'urn:my-other-namespace': { 'my-id': 20 } /* Plus all ECMA-262 entities */ }
 
 Note that the namespace reference at the top level (`'js'`) is available in both of the declared namespaces.
+
+#### Functions As Namespaces
 
 A function may be used as a namespace. It should expect a single argument (a local identifier).
 Its output need not be consistent (that is, it can be random), since JSEN stores evaluations.
