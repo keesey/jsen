@@ -90,13 +90,13 @@ The available ECMA-262 entities are:
 
 	`void` `+` `-` `~` `!` `*` `/` `%` `<<` `>>` `>>>` `<` `>` `<=` `>=` `in` `==` `!=` `===` `!==` `&` `^` `|` `&&` `||` `?:`
 
-	(Note that since colons (`":"`) are reserved in JSEN identifiers, the `?:` operator's name must be written `"?\\:"`)
+	(Note that since colons (`":"`) are reserved in JSEN identifiers, the `?:` operator's name must be written `"?\\:"`.)
 * Top-level functions:
 	
 	`isFinite` `isNaN` `Array` `Boolean` `Number`
 
 	The `Array` function has been modified so that a single argument yields an array with that as its single member (instead of using it to determine the length of the array).
-	
+
 * All constants of the `Math` object (`Math.E`, `Math.LN2`, etc.).
 * All functions of the `Math` object (`Math.abs`, `Math.acos`, etc.).
 
