@@ -80,16 +80,14 @@ When evaluated, `"x"` will yield `3` (JavaScript: `1 + 2`), `"y"` will yield `1`
 
 The available ECMA-262 entities are:
 
-* Literals: `undefined`, `NaN`, `Infinity`.
+* Literals: `undefined` `NaN` `Infinity`.
 * Accessors: `[]`.
-* Operators: `void`, `+`, `-`, `~`, `!`, `*`, `/`, `%`, `<<`, `>>`, `>>>`, `<`, `>`, `<=`, `>=`, `in`, `==`, `!=`, `===`, `!==`, `&`, `^`, `|`, `&&`, `||`, `?:`.**\***
-* Top-level functions: `isFinite`, `isNaN`, `Array`,**\*\*** `Boolean`, `Number`.
+* Operators: `void` `+` `-` `~` `!` `*` `/` `%` `<<` `>>` `>>>` `<` `>` `<=` `>=` `in` `==` `!=` `===` `!==` `&` `^` `|` `&&` `||` `?:`.
+(Note that since colons (`":"`) are reserved in JSEN identifiers, the `?:` operator's name must be written `"?\\:"`)
+* Top-level functions: `isFinite` `isNaN` `Array` `Boolean` `Number`.
+The `Array` function has been modified so that a single argument yields an array with that as its single member (instead of using it to determine the length of the array).
 * All constants of the `Math` object (`Math.E`, `Math.LN2`, etc.).
 * All functions of the `Math` object (`Math.abs`, `Math.acos`, etc.).
-
-**\*** Note that since colons (`":"`) are reserved in JSEN identifiers, the `?:` operator's name must be written `"?\\:"`.
-
-**\*\*** The `Array` function has been modified so that a single argument yields an array with that as its single member (instead of using it to determine the length of the array).
 
 #### Namespace References
 
