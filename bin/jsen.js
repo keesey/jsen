@@ -113,6 +113,9 @@ var jsen;
         SolverImpl.prototype._evalExprString = function (uri, expr) {
             var parts = splitIdentifier(expr), n = parts.length;
             if(n < 2) {
+                if(uri === undefined) {
+                    throw new Error("Cannot use local identifiers when there is no URI.");
+                }
                 return this.eval(uri, parts.join(":"));
             }
             return this.eval(parts.slice(0, n - 1).join(':'), parts[n - 1]);
@@ -210,6 +213,9 @@ var jsen;
             }
             return resultSpaces;
         };
+        SolverImpl.prototype.evalExpr = function (expression) {
+            return this._evalExpr(undefined, expression);
+        };
         return SolverImpl;
     })();
     jsen.SolverImpl = SolverImpl;    
@@ -226,6 +232,10 @@ var jsen;
         return _solver.eval(uri, localName);
     }
     jsen.eval = eval;
+    function evalExpr(expression) {
+        return _solver.evalExpr(expression);
+    }
+    jsen.evalExpr = evalExpr;
     function solver() {
         return new SolverImpl();
     }

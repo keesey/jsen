@@ -157,6 +157,10 @@ module jsen
 				n = parts.length;
 			if (n < 2)
 			{
+				if (uri === undefined)
+				{
+					throw new Error("Cannot use local identifiers when there is no URI.");
+				}
 				return this.eval(uri, parts.join(":"));
 			}
 			return this.eval(parts.slice(0, n - 1).join(':'), parts[n - 1]);
@@ -281,6 +285,10 @@ module jsen
 			}
 			return resultSpaces;
 		}
+		evalExpr(expression: any): any
+		{
+			return this._evalExpr(undefined, expression);
+		}
 	}
 	
 	var _solver = new SolverImpl();
@@ -293,6 +301,11 @@ module jsen
 	export function eval(uri?: string = null, localName?: string = null): any
 	{
 		return _solver.eval(uri, localName);
+	}
+
+	export function evalExpr(expression: any): any
+	{
+		return _solver.evalExpr(expression);
 	}
 	
 	export function solver()

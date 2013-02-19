@@ -164,6 +164,10 @@ Declarations may be chained:
 	jsen.decl('urn:my-namespace', 'my-id', 10)
 	    .decl('urn:my-namespace', 'my-id-2', 20);
 
+In addition to evaluating expresions that have been linked with an identifier through a declaration, expressions may also be evalauted on their own, without an identifier or declaration:
+
+	jsen.evalExpr('urn:my-namespace:my-id'); // 10, if the previous code has been run
+
 #### EMCA-262 Entities
 
 To use the ECMA-262 entities:
@@ -253,3 +257,4 @@ Now you can use all the functions in the same manner as the global functions:
 		}
 	});
 	solver.eval(); // { 'urn:my-namespace': { 'my-id': 33, 'my-array-id': [5, 6, 7]}, 'urn:my-other-namespace': { 'my-id': 44 } /* Plus all ECMA-262 entities */ }
+	solver.evalExpr([ 'http://ecma-international.org/ecma-262/5.1:minus', 'urn:my-namespace:my-id', 11 ]); // 22

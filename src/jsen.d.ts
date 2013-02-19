@@ -16,6 +16,7 @@ module jsen
 		eval(): Namespaces;
 		eval(uri: string): Namespace;
 		eval(uri: string, localName: string): any;
+		evalExpr(expression: any): any;
 	}
 	export function decl(namespaces: Namespaces): Solver;
 	export function decl(uri: string, namespace: Namespace): Solver;
@@ -24,5 +25,6 @@ module jsen
 	export function eval(): Namespaces;
 	export function eval(uri: string): Namespace;
 	export function eval(uri: string, localName: string): any;
+	export function evalExpr(expression: any): any;
 	export function solver(): Solver;
 }
