@@ -105,3 +105,21 @@ test("Function as namespace", function () {
     strictEqual(x, y);
     notEqual(x, z);
 });
+test("Evaluate expression", function () {
+    var solver = jsen.solver();
+    solver.decl('test', {
+        'x': 10,
+        'y': 2,
+        'pow': Math.pow
+    });
+    strictEqual(100, solver.evalExpr([
+        'test:pow', 
+        'test:x', 
+        'test:y'
+    ]));
+    strictEqual(1024, solver.evalExpr([
+        'test:pow', 
+        'test:y', 
+        'test:x'
+    ]));
+});

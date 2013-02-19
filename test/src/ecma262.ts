@@ -277,4 +277,6 @@ test("ECMA-262: Using JSEN examples", function()
 		}
 	});
 	deepEqual(solver.eval(), { 'urn:my-namespace': { 'my-id': 33, 'my-array-id': [5, 6, 7]}, 'urn:my-other-namespace': { 'my-id': 44 }, 'http://ecma-international.org/ecma-262/5.1': jsen.eval(jsen.ecma262.URI) });
+	strictEqual(solver.evalExpr('urn:my-namespace:my-id'), 33);
+	strictEqual(solver.evalExpr(<any[]> [ 'http://ecma-international.org/ecma-262/5.1:-', 'urn:my-namespace:my-id', 11 ]), 22);
 });
