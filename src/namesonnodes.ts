@@ -7,19 +7,77 @@ module jsen.namesonnodes
 {
 	var ARGS_GTE_2 = 'This operation requires at least two arguments.';
 
-	var EMPTYSET = Object.freeze({ empty: true, toString: STRING_FUNCTION });
+	var EMPTYSET = Object.freeze({
+		empty: true,
+		_map: Object.freeze({}),
+		_units: 0,
+		toString: STRING_FUNCTION
+	});
 
 	var NAMESPACE =
 	{
+		'arc': null, // :TODO:
+		'branch': null, // :TODO:
+		'clade': null, // :TODO:
+		'crown': null, // :TODO:
+		'dag': null, // :TODO:
+		'diff': null, // :TODO:
 		'emptyset': EMPTYSET,
+		'eq': null, // :TODO:
+		'intersect': null, // :TODO:
+		'max': null, // :TODO:
+		'min': null, // :TODO:
+		'neq': null, // :TODO:
+		'phylogeny': null, // :TODO:
+		'prc': null, // :TODO:
+		'prceq': null, // :TODO:
+		'prcintersect': null, // :TODO:
+		'prcunion': null, // :TODO:
+		'prsubset': op_logic_multiple(subset),
+		'prsuperset': null, // :TODO:
 		'subset': op_logic_multiple(subset),
+		'superset': op_logic_multiple((a: Taxic, b: Taxic) => subset(b, a)),
+		'suc': null, // :TODO:
+		'suceq': null, // :TODO:
+		'sucintersect': null, // :TODO:
+		'sucunion': null, // :TODO:
+		'synprc': null, // :TODO:
+		'total': null, // :TODO:
 		'union': union,
+		'universalset': null, // :TODO:
 		'unit': unit
 	};
 
 	var STRING_FUNCTION = () => '[object jsen.namesonnodes.Taxic]';
 
 	export var URI = "http://namesonnodes.org/ns/math/2013";
+
+	function create(units: any = null)
+	{
+			if (units === null)
+			{
+				return EMPTYSET;
+			}
+			else if (Array.isArray(units))
+			{
+				var map = {},
+					units = 0;
+				for (var i = 0, n = (<any[]> units).length; i < n; ++i)
+				{
+					var id = units[i];
+					if (!map[id])
+					{
+						units++;
+						map[id] = true;
+					}
+				}
+				if (units === 0)
+				{
+					return EMPTYSET;
+				}
+			}
+		}
+	}
 
 	export function decl(solver?: jsen.Solver, uri?: string): jsen.Solver
 	{
