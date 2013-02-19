@@ -119,8 +119,8 @@ var jsen;
             "Math.sqrt": Math.sqrt,
             "Math.tan": Math.tan
         };
-        var ARGS_GTE_1 = 'This operator requires at least one argument.';
-        var ARGS_GTE_2 = 'This operator requires at least two arguments.';
+        var ARGS_GTE_1 = 'This operation requires at least one argument.';
+        var ARGS_GTE_2 = 'This operation requires at least two arguments.';
         function and() {
             var args = [];
             for (var _i = 0; _i < (arguments.length - 0); _i++) {

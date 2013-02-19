@@ -1,7 +1,7 @@
 ///<reference path='./jsen.d.ts' />
 
 // Polyfill.
-Array.isArray || (Array.isArray = (a) => ('' + a !== a) && {}.toString.call(a) === '[object Array]'));
+Array.isArray || (Array.isArray = (a) => ('' + a !== a) && {}.toString.call(a) === '[object Array]');
 
 module jsen
 {
